@@ -1,5 +1,6 @@
 package com.pbl6.hotelbookingapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import java.util.Set;
 @Table(name="hotel_amenity")
 @Getter
 @Setter
-public class Service {
+public class HotelAmenity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
@@ -23,15 +24,13 @@ public class Service {
     private String name;
     @Column(name="description")
     private String description;
-    @ManyToOne
-    @JoinColumn(name = "hotel_id")
-    private Hotel hotel;
     @Column(name="created_at")
     @CreationTimestamp
     private Date createdAt;
     @Column(name="modified_at")
     @UpdateTimestamp
     private Date modifiedAt;
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
-    private Set<HotelService> hotelServices = new HashSet<>();
+    @OneToMany(mappedBy = "hotelAmenity", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<HotelHotelAmenity> hotelHotelAmenities = new HashSet<>();
 }

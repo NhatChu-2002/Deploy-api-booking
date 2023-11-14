@@ -6,17 +6,18 @@ import lombok.Setter;
 
 @Entity
 @Table(name="hotel_hotel_amenity")
+@IdClass(HotelHotelAmenityId.class)
 @Getter
 @Setter
-public class HotelService {
+public class HotelHotelAmenity {
     @Id
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
     @Id
-    @ManyToOne
-    @JoinColumn(name = "service_id")
-    private Service service;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hotel_amenity_id")
+    private HotelAmenity hotelAmenity;
     @Column(name="price")
     private Double price;
 }

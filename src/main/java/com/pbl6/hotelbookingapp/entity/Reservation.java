@@ -1,5 +1,6 @@
 package com.pbl6.hotelbookingapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,12 @@ public class Reservation {
     private User user;
     @Column(name = "email")
     private String email;
+    @Column(name = "site_fees")
+    private Double siteFee;
+    @Column(name = "tax_paid")
+    private Double taxPaid;
+    @Column(name = "total_price")
+    private Double totalPrice;
     @Column(name = "created_at")
     @CreationTimestamp
     private Date createdAt;
@@ -36,6 +43,7 @@ public class Reservation {
     @PrimaryKeyJoinColumn
     private Invoice invoice;
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<RoomReserved> roomReserved = new HashSet<>();
 
 }

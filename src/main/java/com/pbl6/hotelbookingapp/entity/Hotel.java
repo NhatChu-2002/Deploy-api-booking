@@ -1,5 +1,6 @@
 package com.pbl6.hotelbookingapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -50,22 +52,45 @@ public class Hotel {
     private Date modifiedAt;
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
     @ManyToOne
     @JoinColumn(name = "rate_id")
+    @JsonIgnore
     private HotelRate hotelRate;
-
     @Enumerated(EnumType.STRING)
     private HotelStatus status;
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<ExtraService> extraServices = new HashSet<>();
-
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
-    private Set<HotelService> hotelServices = new HashSet<>();
+    @JsonIgnore
+    private Set<HotelHotelAmenity> hotelHotelAmenities = new HashSet<>();
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<RoomType> roomTypes = new HashSet<>();
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Review> reviews = new HashSet<>();
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<HotelImage> hotelImages = new HashSet<>();
+    public Double getAverageRating() {
+        Set<Review> reviews = getReviews();
+        return calculateAverageRating(reviews);
+    }
+    public Double calculateAverageRating(Set<Review> reviews) {
+        if (reviews == null || reviews.isEmpty()) {
+            return null;
+        }
+
+        double totalRating = 0.0;
+        for (Review review : reviews) {
+            totalRating += review.getRatingTotal();
+        }
+
+        return Math.round((totalRating / reviews.size()) * 10) / 10.0;
+    }
+
+
 }

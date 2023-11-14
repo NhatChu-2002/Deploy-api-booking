@@ -23,15 +23,15 @@ public class RegistrationExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public Map<String, String> userAlreadyExists(UserAlreadyExistsException ex){
+    @ExceptionHandler(UserNotFoundException.class)
+    public Map<String, String> userNotFound(UserNotFoundException ex){
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return error;
     }
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(UserNotFoundException.class)
-    public Map<String, String> userNotFound(UserNotFoundException ex){
+    @ExceptionHandler(ResponseException.class)
+    public Map<String, String> responseError(ResponseException ex){
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return error;
