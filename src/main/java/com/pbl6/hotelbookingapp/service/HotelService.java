@@ -10,6 +10,7 @@ import com.pbl6.hotelbookingapp.repository.*;
 import jakarta.persistence.EntityManager;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -46,8 +47,9 @@ public class HotelService {
     private ExtraServiceRepository extraServiceRepository;
     private EntityManager entityManager;
 
+    private FirebaseStorageService firebaseStorageService;
 
-    public HotelService(HotelRepository hotelRepository, UserRepository userRepository, HotelAmenityRepository amenityRepository, HotelImageRepository imageRepository, HotelRateRepository rateRepository, HotelHotelAmenityRepository hotelHotelAmenityRepository, RoomTypeRepository roomTypeRepository, ReviewRepository reviewRepository, ExtraServiceRepository extraServiceRepository, EntityManager entityManager) {
+    public HotelService(HotelRepository hotelRepository, UserRepository userRepository, HotelAmenityRepository amenityRepository, HotelImageRepository imageRepository, HotelRateRepository rateRepository, HotelHotelAmenityRepository hotelHotelAmenityRepository, RoomTypeRepository roomTypeRepository, ReviewRepository reviewRepository, ExtraServiceRepository extraServiceRepository, EntityManager entityManager, FirebaseStorageService firebaseStorageService) {
         this.hotelRepository = hotelRepository;
         this.userRepository = userRepository;
         this.amenityRepository = amenityRepository;
@@ -58,6 +60,7 @@ public class HotelService {
         this.reviewRepository = reviewRepository;
         this.extraServiceRepository = extraServiceRepository;
         this.entityManager = entityManager;
+        this.firebaseStorageService = firebaseStorageService;
     }
 
     public Optional<Hotel> findHotelByNameAndProvinceAndStreet(String hotelName, String province, String street) {
@@ -117,8 +120,8 @@ public class HotelService {
     }
 
 
-    public AddHotelResponse addHotel(AddHotelRequest addHotelRequest, Integer userId) throws IOException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+    public AddHotelResponse addHotel(AddHotelRequest addHotelRequest) throws IOException {
+        User user = userRepository.findById(addHotelRequest.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
         Hotel hotel = createHotelFromRequest(addHotelRequest, user);
 
         hotelRepository.save(hotel);
@@ -126,12 +129,26 @@ public class HotelService {
         hotel.setHotelHotelAmenities(amenities);
         hotelRepository.save(hotel);
 
+        addExtraAmenities(hotel, addHotelRequest.getExtraServices());
+
         saveHotelImages(hotel, addHotelRequest.getImages());
 
         AddHotelResponse responseDTO = new AddHotelResponse();
         responseDTO.setMessage("Hotel added successfully");
         return responseDTO;
     }
+
+    private void addExtraAmenities(Hotel hotel, List<ExtraService> extraServices) {
+        for (ExtraService service : extraServices) {
+            ExtraService extraService = new ExtraService();
+            extraService.setHotel(hotel);
+            extraService.setName(service.getName());
+            extraService.setPrice(service.getPrice());
+            extraService.setDescription(service.getDescription());
+            extraServiceRepository.save(extraService);
+        }
+    }
+
 
     private Hotel createHotelFromRequest(AddHotelRequest addHotelRequest, User user) {
         Hotel hotel = new Hotel();
@@ -179,34 +196,14 @@ public class HotelService {
     }
 
     private void saveHotelImages(Hotel hotel, List<MultipartFile> images) throws IOException {
-        List<String> imagePaths = saveImages(images);
-        for (String imagePath : imagePaths) {
+        List<String> imageUrls = firebaseStorageService.saveImages(images);
+        for (String imageUrl : imageUrls) {
             HotelImage image = new HotelImage();
             image.setHotel(hotel);
-            image.setImagePath(imagePath);
+            image.setImagePath(imageUrl);
             imageRepository.save(image);
         }
     }
-
-    public List<String> saveImages(List<MultipartFile> images) throws IOException {
-        List<String> imagePaths = new ArrayList<>();
-        String currentDirectory = new File("").getAbsolutePath();
-        String staticPath = currentDirectory + "/src/main/resources/static";
-        String uploadDir = staticPath + File.separator + "images/hotel";
-
-        File uploadDirFile = new File(uploadDir);
-        if (!uploadDirFile.exists()) {
-            uploadDirFile.mkdirs();
-        }
-        for (MultipartFile image : images) {
-            String imagePath = uploadDir + File.separator + image.getOriginalFilename();
-            image.transferTo(new File(imagePath));
-            imagePaths.add(imagePath);
-        }
-        return imagePaths;
-    }
-
-
 
     public CustomSearchResult filterSearchHotel(FilterSearchRequest request) {
         CustomSearchResult result = new CustomSearchResult();
@@ -218,23 +215,34 @@ public class HotelService {
         search.setAdultCount(request.getAdultCount());
         search.setChildrenCount(request.getChildrenCount());
         CustomSearchResult firstSearch = searchHotels(search);
-        int pageIndex = request.getPageIndex();
-        int pageSize = request.getPageSize();
-
-        if(request.getCount() == 0 && request.getProvince() == null && request.getCheckinDay() == null && request.getCheckoutDay() == null && request.getChildrenCount()==0 && request.getAdultCount() == 0){
-
-            Specification<Hotel> spec = HotelSpecifications.withSmallFilters( request);
-            handleSearchResult(result, pageIndex, pageSize, spec);
-
-        }else {
-            Specification<Hotel> spec = HotelSpecifications.withFilters(firstSearch, request);
-            handleSearchResult(result, pageIndex, pageSize, spec);
-
+        if(request.getPageIndex() == 0 || request.getPageSize() == 0)
+        {
+            handleSearchRequest(request, result, firstSearch,0,6);
         }
-        result.setPageIndex(pageIndex);
-        result.setPageSize(pageSize);
+        else {
+
+            int pageIndex = request.getPageIndex()-1;
+            int pageSize = request.getPageSize();
+
+            handleSearchRequest(request, result, firstSearch,pageIndex,pageSize);
+        }
 
         return result;
+    }
+
+    private void handleSearchRequest(FilterSearchRequest request, CustomSearchResult result, CustomSearchResult firstSearch, int pageIndex, int pageSize) {
+        Specification<Hotel> spec;
+        if(request.getCount() == 0 && request.getProvince() == null && request.getCheckinDay() == null && request.getCheckoutDay() == null && request.getChildrenCount()==0 && request.getAdultCount() == 0){
+
+            spec = HotelSpecifications.withSmallFilters(request);
+
+        }else {
+            spec = HotelSpecifications.withFilters(firstSearch, request);
+
+        }
+        handleSearchResult(result, pageIndex, pageSize, spec);
+        result.setPageIndex(pageIndex + 1);
+        result.setPageSize(pageSize);
     }
 
     private void handleSearchResult(CustomSearchResult result, int pageIndex, int pageSize, Specification<Hotel> spec) {
@@ -244,7 +252,7 @@ public class HotelService {
         {
             throw new ResponseException("No hotel found!");
         }
-        if(pageTotal-1 < pageIndex)
+        if(pageTotal < pageIndex)
         {
             throw new ResponseException("Page index out of bound!");
         }
@@ -257,7 +265,7 @@ public class HotelService {
             result.setLocation(hotels.get(0).getProvince());
         }
         result.setHotels(filteredHotels);
-        result.setTotalItems((long) filteredHotels.size());
+        result.setTotalItems((long) hotels.size());
         result.setPageTotal(calculatePageTotal(searchResults.size(), pageSize));
     }
 
@@ -312,15 +320,15 @@ public class HotelService {
                 .map(room -> {
 
                     return RoomTypeDetails.builder()
-                        .id(room.getId())
-                        .roomName(room.getName())
-                        .price(room.getPrice())
-                        .roomImage(getFirstImageByRoom(room.getId()))
-                        .quantity(room.getCount())
-                        .adult(room.getAdultCount())
-                        .children(room.getChildrenCount())
-                        .roomAmenities(getListAmenities(room))
-                        .build();
+                            .id(room.getId())
+                            .roomName(room.getName())
+                            .price(room.getPrice())
+                            .roomImage(getFirstImageByRoom(room.getId()))
+                            .quantity(room.getCount())
+                            .adult(room.getAdultCount())
+                            .children(room.getChildrenCount())
+                            .roomAmenities(getListAmenities(room))
+                            .build();
                 })
                 .collect(Collectors.toList());
     }
@@ -370,6 +378,5 @@ public class HotelService {
         return extraServiceRepository.findByHotelId(hotelId);
     }
 }
-
 
 

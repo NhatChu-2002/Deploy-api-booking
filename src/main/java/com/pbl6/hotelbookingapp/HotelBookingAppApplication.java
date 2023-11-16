@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
+@EnableAsync
 public class HotelBookingAppApplication {
 	@Value("${allowed.origins}")
 	private String[] theAllowedOrigins;
@@ -21,7 +23,11 @@ public class HotelBookingAppApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping(basePath + "/**").allowedOrigins("*");
+				registry.addMapping(basePath + "/**")
+						.allowedOrigins("http://localhost:3000")
+						.allowCredentials(true)
+						.allowedMethods("GET", "POST", "PUT", "DELETE","PATCH")
+						.allowedHeaders("*");
 			}
 		};
 	}
