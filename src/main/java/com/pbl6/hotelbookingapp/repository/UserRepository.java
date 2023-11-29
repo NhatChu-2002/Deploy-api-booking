@@ -2,6 +2,8 @@ package com.pbl6.hotelbookingapp.repository;
 
 import com.pbl6.hotelbookingapp.entity.Role;
 import com.pbl6.hotelbookingapp.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +17,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findById(Integer id);
     Optional<User> findByEmail(String email);
+    List<User> findByEmailIgnoreCaseContaining(String email);
     User findByEmailIgnoreCase(String email);
     Boolean existsByEmail(String email);
 
@@ -38,4 +41,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAll();
     boolean existsByEmailAndIdNot(String email, Integer id);
+    Page<User> findByIsDeletedFalse(Pageable pageable);
 }

@@ -22,8 +22,11 @@ public class ReservationRequest {
     @Email(message = "invalid email address")
     private String email;
     private String phoneNumber;
+    private String paymentMethod;
     private List<RoomTypeReserved> roomTypeReservedList;
     private Double totalPrice;
+    private String orderId;
+    private String transDate;
     private Double tax;
     private Double vat;
     private LocalDate startDay;

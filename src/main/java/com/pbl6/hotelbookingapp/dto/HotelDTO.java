@@ -10,12 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
 import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddHotelRequest {
-    private Integer userId;
+public class HotelDTO {
     private String name;
     private String description;
     private String province;

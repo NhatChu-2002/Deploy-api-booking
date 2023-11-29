@@ -1,10 +1,8 @@
 package com.pbl6.hotelbookingapp.controller;
 
+import com.pbl6.hotelbookingapp.Exception.ResponseException;
 import com.pbl6.hotelbookingapp.Exception.UserNotFoundException;
-import com.pbl6.hotelbookingapp.dto.ChangePasswordRequest;
-import com.pbl6.hotelbookingapp.dto.EditUserRequest;
-import com.pbl6.hotelbookingapp.dto.ErrorResponse;
-import com.pbl6.hotelbookingapp.dto.HttpResponse;
+import com.pbl6.hotelbookingapp.dto.*;
 import com.pbl6.hotelbookingapp.entity.User;
 import com.pbl6.hotelbookingapp.service.UserService;
 import jakarta.validation.Valid;
@@ -22,6 +20,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/user")
 @RequiredArgsConstructor
+@CrossOrigin
 public class UserController {
 
     private final UserService service;
@@ -62,29 +61,5 @@ public class UserController {
         }
 
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<?> editUser(@PathVariable Integer id, @RequestBody @Valid EditUserRequest updatedUser) {
-        try{
-            service.editUser(updatedUser, id);
-            return ResponseEntity.ok().body("Update user successfully");
-        }
-        catch(UserNotFoundException e)
-        {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse(e.getMessage()));
-        }
 
-
-    }
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Integer id) {
-        var user = service.getUserById(id);
-        return ResponseEntity.ok(user);
-    }
-    @GetMapping("/all")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = service.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
 }

@@ -1,19 +1,16 @@
 package com.pbl6.hotelbookingapp.controller;
 
-import com.pbl6.hotelbookingapp.dto.AddHotelRequest;
-import com.pbl6.hotelbookingapp.dto.AddHotelResponse;
-import com.pbl6.hotelbookingapp.dto.AddRoomTypeRequest;
-import com.pbl6.hotelbookingapp.dto.AddRoomTypeResponse;
+import com.pbl6.hotelbookingapp.dto.RoomTypeDTO;
+import com.pbl6.hotelbookingapp.dto.RoomTypeDetailResponse;
 import com.pbl6.hotelbookingapp.service.RoomTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api/room-types")
+@CrossOrigin
 public class RoomTypeController {
 
     private final RoomTypeService roomTypeService;
@@ -23,13 +20,35 @@ public class RoomTypeController {
         this.roomTypeService = roomTypeService;
     }
 
-    @RequestMapping(value = "/add" , method = RequestMethod.POST, consumes = { "multipart/form-data" })
-    public ResponseEntity<AddRoomTypeResponse> addRoomType(@ModelAttribute AddRoomTypeRequest addRoomTypeRequest) {
+    @GetMapping(value = "/{roomTypeId}")
+    public  RoomTypeDetailResponse getRoomTypeById(@RequestHeader("hotelId") Integer hotelId, @PathVariable Integer roomTypeId) {
+        return roomTypeService.findRoomTypeById(hotelId, roomTypeId);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST,  consumes = {"multipart/form-data"})
+    public ResponseEntity<String> addRoomType(@RequestHeader("hotelId") Integer hotelId, @ModelAttribute RoomTypeDTO roomTypeDTO) {
         try {
-            AddRoomTypeResponse response = roomTypeService.addRoomTypeResponse(addRoomTypeRequest);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            roomTypeService.addRoomType(hotelId, roomTypeDTO);
+            return new ResponseEntity<>("Room Type added successfully", HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(new AddRoomTypeResponse("Error adding room type"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error adding Room Type", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    @RequestMapping (value = "/{roomTypeId}", method = RequestMethod.PUT, consumes = {"multipart/form-data"})
+    public ResponseEntity<String> updateRoomType(@RequestHeader("hotelId") Integer hotelId, @PathVariable Integer roomTypeId, @ModelAttribute RoomTypeDTO roomTypeDTO) {
+        try {
+            roomTypeService.updateRoomType(hotelId, roomTypeId, roomTypeDTO);
+            return new ResponseEntity<>("Room Type updated successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error updating Room Type", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/{roomTypeId}")
+    public ResponseEntity<String> deleteRoomType(@RequestHeader("hotelId") Integer hotelId, @PathVariable Integer roomTypeId) {
+        roomTypeService.deleteRoomTypeById(hotelId, roomTypeId);
+        return ResponseEntity.ok("Room Type deleted successfully");
     }
 }

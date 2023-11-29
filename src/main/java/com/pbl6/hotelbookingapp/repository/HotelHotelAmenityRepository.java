@@ -6,7 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+
 public interface HotelHotelAmenityRepository extends JpaRepository<HotelHotelAmenity, Integer> {
     List<HotelHotelAmenity> findByHotel(Hotel hotel);
 
+    void deleteByHotelId(Integer hotelId);
+
+    void deleteByHotel(Hotel hotel);
 }

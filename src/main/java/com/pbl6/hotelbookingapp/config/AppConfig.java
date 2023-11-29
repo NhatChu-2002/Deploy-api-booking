@@ -27,10 +27,12 @@ public class AppConfig implements WebMvcConfigurer  {
     private String[] theAllowedOrigins;
     @Value("${spring.data.rest.base-path}")
     private String basePath;
-//    @Override
-//    public void addCorsMappings(CorsRegistry cors) {
-//        cors.addMapping(basePath + "/**").allowedOrigins("*");
-//    }
+    @Override
+    public void addCorsMappings(CorsRegistry cors) {
+        cors.addMapping(basePath + "/**").allowedOrigins(theAllowedOrigins).allowCredentials(true)
+                .allowedMethods("GET", "POST", "PUT", "DELETE","PATCH")
+                .allowedHeaders("*");
+    }
     @Bean
     public UserDetailsService userDetailsService()
     {

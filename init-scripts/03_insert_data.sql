@@ -258,18 +258,18 @@ VALUES(1, 'Hồ bơi riêng'),
 
 
 INSERT INTO room_type(id, `name`, count, price, bathroom_count, room_area, adult_count, children_count, `description`, hotel_id, view_id)
-VALUES(1, 'Phòng VIP', 3, 666.666, 1, 30, 2, 1, '', 1, 1),
-      (2, 'Phòng VIPPRO', 4, 777.666, 2, 40, 3, 1, '', 1, 2),
-      (3, 'Phòng VIPVIPPRO', 5, 888.666, 1, 30, 2, 2, '', 1, 1),
-      (4, 'Phòng VIP', 3, 999.666, 1, 35, 3, 2, '', 2, 1),
-      (5, 'Phòng VIPPRO', 4, 666.777, 1, 40, 2, 1, '', 2, 2),
-      (6, 'Phòng VIPVIPPRO', 5, 777.777, 1, 30, 2, 1, '', 2, 2),
-      (7, 'Phòng VIP', 3, 888.777, 2, 40, 1, 0, '', 3, 1),
-      (8, 'Phòng VIPPRO', 4, 999.777, 2, 35, 2, 1, '', 3, 1),
-	  (9, 'Phòng VIPVIPPRO', 5, 777.777, 1, 30, 2, 1, '', 3, 2),
-      (10, 'Phòng VIP', 3, 888.777, 1, 50, 3, 1, '', 4, 1),
-      (11, 'Phòng VIPPRO', 4, 999.777, 2, 60, 2, 0, '', 4, 1),
-      (12, 'Phòng VIPVIPPRO', 5, 666.666, 1, 55, 2, 1, '', 4, 1);
+VALUES(1, 'Phòng VIP', 3, 1000000.0, 1, 30, 2, 1, '', 1, 1),
+      (2, 'Phòng VIPPRO', 4, 2500000.0, 2, 40, 3, 1, '', 1, 2),
+      (3, 'Phòng VIPVIPPRO', 5, 3000000.0, 1, 30, 2, 2, '', 1, 1),
+      (4, 'Phòng VIP', 3, 3000000.0, 1, 35, 3, 2, '', 2, 1),
+      (5, 'Phòng VIPPRO', 4, 3500000.0, 1, 40, 2, 1, '', 2, 2),
+      (6, 'Phòng VIPVIPPRO', 5, 3800000.0, 1, 30, 2, 1, '', 2, 2),
+      (7, 'Phòng VIP', 3, 3000000.0, 2, 40, 1, 0, '', 3, 1),
+      (8, 'Phòng VIPPRO', 4, 3300000.0, 2, 35, 2, 1, '', 3, 1),
+	  (9, 'Phòng VIPVIPPRO', 5, 4000000.0, 1, 30, 2, 1, '', 3, 2),
+      (10, 'Phòng VIP', 3, 5000000.0, 1, 50, 3, 1, '', 4, 1),
+      (11, 'Phòng VIPPRO', 4, 10000000.0, 2, 60, 2, 0, '', 4, 1),
+      (12, 'Phòng VIPVIPPRO', 5, 12000000.0, 1, 55, 2, 1, '', 4, 1);
 
       
       
@@ -309,10 +309,6 @@ VALUES(1, 1, 1),
       (11, 3, 2),
       (12, 4, 1);
 
-
-
-INSERT INTO payment_type(id, payment_type_name)
-VALUES(1, 'Thẻ tín dụng');
 
 
 -- INSERT INTO invoice()
@@ -361,24 +357,24 @@ VALUES(19, 7.0, 'Vị trí thuận lợi, bạn Mạnh và bạn Đào lễ tân
 	  (36, 7.5, 'sạch sẽ , nhân viên nhiệt tình', 39, 8);	  
       
 INSERT INTO room_type(id, `name`, count, price, bathroom_count, room_area, adult_count, children_count, `description`, hotel_id, view_id)
-VALUES(13, 'Phòng đơn', 2, 300.000, 1, 30, 1, 1, '', 7, 1),
-      (14, 'Phòng đôi', 2, 500.000, 2, 40, 2, 1, '', 7, 2),
-      (15, 'Phòng suite', 2, 900.000, 1, 100, 5, 2, '', 7, 1),
-      (16, 'Phòng đơn', 1, 400.000, 1, 35, 3, 2, '', 8, 1),
-      (17, 'Phòng đôi', 2, 566.777, 1, 40, 2, 1, '', 8, 2),
-      (18, 'Phòng suite', 2, 677.777, 1, 100, 2, 1, '',8, 2),
-      (19, 'Phòng đơn', 10, 678.777, 2, 40, 1, 0, '', 9, 1),
-      (20, 'Phòng đôi', 7, 900.777, 2, 60, 2, 1, '', 9, 1),
-	  (21, 'Phòng suite', 5, 1000.777, 1, 100, 2, 1, '', 9, 2),
-      (22, 'Phòng đơn', 3, 888.777, 1, 50, 3, 1, '', 10, 1),
-      (23, 'Phòng đôi', 4, 999.777, 2, 60, 2, 0, '', 10, 1),
-      (24, 'Phòng suite', 5, 1500.666, 1, 100, 2, 1, '', 10, 2),
-      (25, 'Phòng đơn', 3, 888.777, 1, 50, 3, 1, '', 11, 2),
-      (26, 'Phòng đôi', 4, 999.777, 2, 60, 2, 0, '', 11, 1),
-      (27, 'Phòng suite', 5, 1500.666, 1, 100, 2, 1, '', 11, 1),
-      (28, 'Phòng đơn', 3, 888.777, 1, 50, 3, 1, '', 12, 2),
-      (29, 'Phòng đôi', 4, 999.777, 2, 60, 2, 0, '', 12, 1),
-      (30, 'Phòng suite', 5, 1500.666, 1, 88, 2, 1, '', 12, 1);
+VALUES(13, 'Phòng đơn', 2, 4000000.0, 1, 30, 1, 1, '', 7, 1),
+      (14, 'Phòng đôi', 2, 4850000.0, 2, 40, 2, 1, '', 7, 2),
+      (15, 'Phòng suite', 2, 8000000.0, 1, 100, 5, 2, '', 7, 1),
+      (16, 'Phòng đơn', 1, 7000000.0, 1, 35, 3, 2, '', 8, 1),
+      (17, 'Phòng đôi', 2, 7500000.0, 1, 40, 2, 1, '', 8, 2),
+      (18, 'Phòng suite', 2, 10000000.0, 1, 100, 2, 1, '',8, 2),
+      (19, 'Phòng đơn', 10, 2000000.0, 2, 40, 1, 0, '', 9, 1),
+      (20, 'Phòng đôi', 7, 3000000.0, 2, 60, 2, 1, '', 9, 1),
+	  (21, 'Phòng suite', 5, 5000000.0, 1, 100, 2, 1, '', 9, 2),
+      (22, 'Phòng đơn', 3, 3000000.0, 1, 50, 3, 1, '', 10, 1),
+      (23, 'Phòng đôi', 4, 4500000.0, 2, 60, 2, 0, '', 10, 1),
+      (24, 'Phòng suite', 5, 5000000.0, 1, 100, 2, 1, '', 10, 2),
+      (25, 'Phòng đơn', 3,3000000.0, 1, 50, 3, 1, '', 11, 2),
+      (26, 'Phòng đôi', 4, 3800000.0, 2, 60, 2, 0, '', 11, 1),
+      (27, 'Phòng suite', 5, 8000000.0, 1, 100, 2, 1, '', 11, 1),
+      (28, 'Phòng đơn', 3, 3000000.0, 1, 50, 3, 1, '', 12, 2),
+      (29, 'Phòng đôi', 4, 4000000.0, 2, 60, 2, 0, '', 12, 1),
+      (30, 'Phòng suite', 5, 5000000.0, 1, 88, 2, 1, '', 12, 1);
 INSERT INTO room (room_type_id)
 SELECT 
     rt.id
@@ -417,6 +413,82 @@ SET rule = 'Không phù hợp cho trẻ vị thành niên, Không cho phép hút
 ALTER TABLE reservation
 ADD COLUMN reservation_code VARCHAR(255);
 
+UPDATE `booking-app`.`room` SET `name` = 'room_1' WHERE (`id` = '1');
+UPDATE `booking-app`.`room` SET `name` = 'room_2' WHERE (`id` = '2');
+UPDATE `booking-app`.`room` SET `name` = 'room_3' WHERE (`id` = '3');
+UPDATE `booking-app`.`room` SET `name` = 'room_4535' WHERE (`id` = '4');
+UPDATE `booking-app`.`room` SET `name` = 'room_vaf' WHERE (`id` = '5');
+UPDATE `booking-app`.`room` SET `name` = 'room_134' WHERE (`id` = '6');
+UPDATE `booking-app`.`room` SET `name` = 'room_334' WHERE (`id` = '7');
+UPDATE `booking-app`.`room` SET `name` = 'room_1543' WHERE (`id` = '8');
+UPDATE `booking-app`.`room` SET `name` = 'room_1233' WHERE (`id` = '9');
+UPDATE `booking-app`.`room` SET `name` = 'room_134' WHERE (`id` = '10');
+UPDATE `booking-app`.`room` SET `name` = 'room_16' WHERE (`id` = '11');
+UPDATE `booking-app`.`room` SET `name` = 'room_16546' WHERE (`id` = '12');
+UPDATE `booking-app`.`room` SET `name` = 'room_1234' WHERE (`id` = '13');
+UPDATE `booking-app`.`room` SET `name` = 'room_167' WHERE (`id` = '14');
+UPDATE `booking-app`.`room` SET `name` = 'room_145' WHERE (`id` = '15');
+UPDATE `booking-app`.`room` SET `name` = 'room_165' WHERE (`id` = '16');
+UPDATE `booking-app`.`room` SET `name` = 'room_1876' WHERE (`id` = '17');
+UPDATE `booking-app`.`room` SET `name` = 'room_1' WHERE (`id` = '19');
+UPDATE `booking-app`.`room` SET `name` = 'room_176' WHERE (`id` = '18');
+UPDATE `booking-app`.`room` SET `name` = 'room_156' WHERE (`id` = '20');
+UPDATE `booking-app`.`room` SET `name` = 'room_1546' WHERE (`id` = '21');
+UPDATE `booking-app`.`room` SET `name` = 'room_1435' WHERE (`id` = '22');
+UPDATE `booking-app`.`room` SET `name` = 'room_123' WHERE (`id` = '23');
+UPDATE `booking-app`.`room` SET `name` = 'room_1677' WHERE (`id` = '24');
+UPDATE `booking-app`.`room` SET `name` = 'room_168567' WHERE (`id` = '25');
+UPDATE `booking-app`.`room` SET `name` = 'room_1123' WHERE (`id` = '26');
+UPDATE `booking-app`.`room` SET `name` = 'room_19879' WHERE (`id` = '27');
+UPDATE `booking-app`.`room` SET `name` = 'room_1786' WHERE (`id` = '28');
+UPDATE `booking-app`.`room` SET `name` = 'room_13423' WHERE (`id` = '29');
+UPDATE `booking-app`.`room` SET `name` = 'room_14563' WHERE (`id` = '30');
+UPDATE `booking-app`.`room` SET `name` = 'room_134563' WHERE (`id` = '31');
+UPDATE `booking-app`.`room` SET `name` = 'room_14523' WHERE (`id` = '32');
+UPDATE `booking-app`.`room` SET `name` = 'room_143' WHERE (`id` = '33');
+UPDATE `booking-app`.`room` SET `name` = 'room_1345' WHERE (`id` = '34');
+UPDATE `booking-app`.`room` SET `name` = 'room_145' WHERE (`id` = '35');
+UPDATE `booking-app`.`room` SET `name` = 'room_12345' WHERE (`id` = '36');
+UPDATE `booking-app`.`room` SET `name` = 'room_12345' WHERE (`id` = '37');
+UPDATE `booking-app`.`room` SET `name` = 'room_1345' WHERE (`id` = '38');
+UPDATE `booking-app`.`room` SET `name` = 'room_1545' WHERE (`id` = '39');
+UPDATE `booking-app`.`room` SET `name` = 'room_1342' WHERE (`id` = '40');
+UPDATE `booking-app`.`room` SET `name` = 'room_1352' WHERE (`id` = '41');
+UPDATE `booking-app`.`room` SET `name` = 'room_1325' WHERE (`id` = '42');
+UPDATE `booking-app`.`room` SET `name` = 'room_1ds' WHERE (`id` = '46');
+UPDATE `booking-app`.`room` SET `name` = 'gsdf' WHERE (`id` = '48');
+UPDATE `booking-app`.`room` SET `name` = 'dfg' WHERE (`id` = '44');
+UPDATE `booking-app`.`room` SET `name` = 'sgd' WHERE (`id` = '43');
+UPDATE `booking-app`.`room` SET `name` = 'sdgf' WHERE (`id` = '45');
+UPDATE `booking-app`.`room` SET `name` = 'asw' WHERE (`id` = '47');
+UPDATE `booking-app`.`room` SET `name` = 'ass' WHERE (`id` = '49');
+UPDATE `booking-app`.`room` SET `name` = 'dsa' WHERE (`id` = '51');
+UPDATE `booking-app`.`room` SET `name` = 'asdf' WHERE (`id` = '50');
+UPDATE `booking-app`.`room` SET `name` = 'sd' WHERE (`id` = '54');
+UPDATE `booking-app`.`room` SET `name` = 'asdfd' WHERE (`id` = '52');
+UPDATE `booking-app`.`room` SET `name` = 'dasd' WHERE (`id` = '53');
+UPDATE `booking-app`.`room` SET `name` = 'ghhjnngh' WHERE (`id` = '55');
+UPDATE `booking-app`.`room` SET `name` = 'fgff' WHERE (`id` = '57');
+UPDATE `booking-app`.`room` SET `name` = 'ffff' WHERE (`id` = '56');
+UPDATE `booking-app`.`room` SET `name` = 'ffff' WHERE (`id` = '60');
+UPDATE `booking-app`.`room` SET `name` = 'ff' WHERE (`id` = '58');
+UPDATE `booking-app`.`room` SET `name` = 'fffadgdf' WHERE (`id` = '59');
+UPDATE `booking-app`.`room` SET `name` = 'fgsdfg' WHERE (`id` = '62');
+UPDATE `booking-app`.`room` SET `name` = 'dfg123' WHERE (`id` = '61');
+UPDATE `booking-app`.`room` SET `name` = '454535' WHERE (`id` = '63');
+UPDATE `booking-app`.`room` SET `name` = '233423423' WHERE (`id` = '65');
+UPDATE `booking-app`.`room` SET `name` = '12312312' WHERE (`id` = '64');
+UPDATE `booking-app`.`room` SET `name` = '12353453' WHERE (`id` = '66');
+UPDATE `booking-app`.`room` SET `name` = '11231231' WHERE (`id` = '68');
+UPDATE `booking-app`.`room` SET `name` = '3123123' WHERE (`id` = '67');
+UPDATE `booking-app`.`room` SET `name` = '1231231' WHERE (`id` = '70');
+UPDATE `booking-app`.`room` SET `name` = '131231' WHERE (`id` = '69');
+UPDATE `booking-app`.`room` SET `name` = '12312' WHERE (`id` = '74');
+UPDATE `booking-app`.`room` SET `name` = '31312' WHERE (`id` = '71');
+UPDATE `booking-app`.`room` SET `name` = '313213' WHERE (`id` = '73');
+UPDATE `booking-app`.`room` SET `name` = '1312' WHERE (`id` = '72');
+ALTER TABLE user
+ADD COLUMN is_deleted TINYINT(1) NOT NULL DEFAULT 0;
 
 
 

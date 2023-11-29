@@ -1,20 +1,19 @@
 package com.pbl6.hotelbookingapp.controller;
 
 
-import com.pbl6.hotelbookingapp.Exception.UserNotFoundException;
+import com.pbl6.hotelbookingapp.Exception.ResponseException;
 import com.pbl6.hotelbookingapp.dto.*;
-import com.pbl6.hotelbookingapp.entity.User;
 import com.pbl6.hotelbookingapp.service.HotelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
-import java.util.List;
+
 import java.util.Set;
 
 
 @RestController
 @RequestMapping("api/hotel")
+@CrossOrigin
 public class HotelController {
     private HotelService hotelService;
 
@@ -27,27 +26,77 @@ public class HotelController {
         return hotelService.getTop4HotelsWithFirstImage();
     }
 
-    @RequestMapping(value = "/add" , method = RequestMethod.POST, consumes = { "multipart/form-data" })
-    public ResponseEntity<AddHotelResponse> addHotel(@ModelAttribute AddHotelRequest requestDTO) {
+
+    @RequestMapping(value = "" , method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public ResponseEntity<String> addHotel(@RequestHeader("userId") Integer userId, @ModelAttribute HotelDTO requestDTO) {
         try {
-            AddHotelResponse responseDTO = hotelService.addHotel(requestDTO);
-            return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+            hotelService.addHotel(userId, requestDTO);
+            return new ResponseEntity<>("Hotel added successfully", HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(new AddHotelResponse("Error adding hotel"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error adding hotel", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @RequestMapping (value = "/{hotelId}", method = RequestMethod.PUT, consumes = {"multipart/form-data"})
+    public ResponseEntity<String> updateHotel(@RequestHeader("userId") Integer userId, @PathVariable Integer hotelId, @ModelAttribute HotelDTO requestDTO) {
+        try {
+            hotelService.updateHotel(userId, hotelId, requestDTO);
+            return new ResponseEntity<>("Hotel updated successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error updating hotel", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/{hotelId}")
+    public ResponseEntity<String> deleteHotel(@RequestHeader("userId") Integer userId, @PathVariable Integer hotelId) {
+        hotelService.deleteHotelById(userId, hotelId);
+        return ResponseEntity.ok("Hotel deleted successfully");
+    }
+
     @PostMapping("/search")
-    public CustomSearchResult searchHotels(@RequestBody SearchRequest request) {
-        return hotelService.searchHotels(request);
+    public ResponseEntity<?> searchHotels(@RequestBody SearchRequest request) {
+
+        try{
+            CustomSearchResult response = hotelService.searchHotels(request);
+
+            return ResponseEntity.ok().body(response);
+        }
+        catch(ResponseException e)
+        {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
     }
     @PostMapping("/filter/search")
-    public CustomSearchResult filterSearchHotels(@RequestBody FilterSearchRequest request) {
-        return hotelService.filterSearchHotel(request);
+    public ResponseEntity<?> filterSearchHotels(@RequestBody FilterSearchRequest request) {
+        try{
+            CustomSearchResult response = hotelService.filterSearchHotel(request);
+
+            return ResponseEntity.ok().body(response);
+        }
+        catch(ResponseException e)
+        {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
 
     }
-    @GetMapping("/{hotelId}")
-    public ResponseEntity<HotelDetails> getHotelDetails(@PathVariable Integer hotelId) {
-        HotelDetails hotelDetails = hotelService.getHotelDetails(hotelId);
-        return ResponseEntity.ok(hotelDetails);
+
+    @PostMapping ("/rooms")
+    public ResponseEntity<?> getHotelDetails(@RequestBody HotelDetailsRequest request) {
+        try{
+            HotelDetails hotelDetails = hotelService.getHotelDetails(request);
+            return ResponseEntity.ok(hotelDetails);
+        }
+        catch(ResponseException e)
+        {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
+
     }
 }

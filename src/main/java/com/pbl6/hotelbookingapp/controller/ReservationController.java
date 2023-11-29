@@ -15,6 +15,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("api/reservation")
+@CrossOrigin
 public class ReservationController {
     private ReservationService reservationService;
 
@@ -22,13 +23,52 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
+    @PostMapping("/history")
+    public ResponseEntity<?> getHistory(@RequestBody  GenericRequest<Integer> request) {
+        try{
+            ReservedHistoryResponse response= reservationService.getHistory(request.getRequestData());
+            return ResponseEntity.ok().body(response);
+        }
+        catch(ResponseException e)
+        {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
+    }
 
+    @PostMapping("/details")
+    public ResponseEntity<?> getReservationDetails(@RequestBody GenericRequest<String> request) {
+        try{
+            ReservationDto response= reservationService.getReservationByCode(request.getRequestData());
+            return ResponseEntity.ok().body(response);
+        }
+        catch(ResponseException e)
+        {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
+    }
 
     @PostMapping("/booking")
     public ResponseEntity<?> makingReservation(@RequestBody ReservationRequest request) {
         try{
             ReservationResponse reservationResponse= reservationService.makeReservation(request);
             return ResponseEntity.ok().body(reservationResponse);
+        }
+        catch(ResponseException e)
+        {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
+    }
+    @PostMapping("/cancel")
+    public ResponseEntity<?> cancelReservation(@RequestBody  CancelRequest request) {
+        try{
+            CancelResponse response= reservationService.cancelReservation(request);
+            return ResponseEntity.ok().body(response);
         }
         catch(ResponseException e)
         {
