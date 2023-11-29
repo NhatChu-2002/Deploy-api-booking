@@ -61,5 +61,18 @@ public class UserController {
         }
 
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Integer id) {
+        try {
+            var user = service.getUserById(id);
+            return ResponseEntity.ok(user);
+        }catch (ResponseException e)
+        {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse(e.getMessage()));
+        }
+
+    }
 
 }
