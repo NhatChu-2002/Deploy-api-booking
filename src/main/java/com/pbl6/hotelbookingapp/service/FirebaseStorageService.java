@@ -1,10 +1,8 @@
 package com.pbl6.hotelbookingapp.service;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.storage.*;
+import com.google.common.io.ByteStreams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,14 +18,11 @@ public class FirebaseStorageService {
 
     @Value("${firebase.storage.bucket-name}")
     private String bucketName;
-
-    @Value("${firebase.credentials.path}")
+    @Value("${google.application.credentials-path}") // Đường dẫn đến tệp tin JSON của Firebase Service Account
     private String credentialsPath;
-
     public List<String> saveImages(List<MultipartFile> images) throws IOException {
         List<String> imagePaths = new ArrayList<>();
-
-        // Khởi tạo Storage từ tệp tin JSON của Firebase Service Account
+//        Storage storage = StorageOptions.getDefaultInstance().getService();
         StorageOptions storageOptions = StorageOptions.newBuilder()
                 .setCredentials(GoogleCredentials.fromStream(new FileInputStream(credentialsPath)))
                 .build();
@@ -42,13 +37,13 @@ public class FirebaseStorageService {
                 // Upload image to Firebase Storage
                 BlobId blobId = BlobId.of(bucketName, storagePath);
                 BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(image.getContentType()).build();
-                byte[] bytes = image.getBytes();
+                byte[] bytes = ByteStreams.toByteArray(image.getInputStream());
                 storage.create(blobInfo, bytes);
 
                 String imageUrl = String.format("https://storage.googleapis.com/%s/%s", bucketName, storagePath);
 
                 imagePaths.add(imageUrl);
-            } catch (IOException e) {
+            } catch (StorageException | IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to upload image to Firebase Storage");
             }
@@ -61,3 +56,5 @@ public class FirebaseStorageService {
         return UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
     }
 }
+
+
