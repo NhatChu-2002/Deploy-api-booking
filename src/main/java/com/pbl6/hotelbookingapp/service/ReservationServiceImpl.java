@@ -170,7 +170,7 @@ public class ReservationServiceImpl implements ReservationService {
                     .reservationCode(reservationCode)
                     .status(ReservationStatus.CONFIRMED)
                     .build();
-//            emailService.sendReservationConfirmationEmail(reservationResponse,saveUser.getEmail());
+            emailService.sendReservationConfirmationEmail(reservationResponse,saveUser.getEmail());
             reservationRepository.save(reservation);
 
             for (int i = 0; i < availableRooms.size(); i++) {
@@ -447,7 +447,7 @@ public class ReservationServiceImpl implements ReservationService {
                         .amount(invoice.getInvoiceAmount().toString())
                         .refundAmount(invoice.getInvoiceAmount()*refundPercentage)
                         .build();
-//                emailService.sendCancellationEmail(cancelResponse, foundReservation.getEmail());
+                emailService.sendCancellationEmail(cancelResponse, foundReservation.getEmail());
 
                 invoiceRepository.save(invoice);
                 roomReservedRepository.deleteAllByReservation(foundReservation);
