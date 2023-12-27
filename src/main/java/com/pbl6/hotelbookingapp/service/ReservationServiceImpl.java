@@ -6,6 +6,8 @@ import com.pbl6.hotelbookingapp.email.EmailService;
 import com.pbl6.hotelbookingapp.entity.*;
 import com.pbl6.hotelbookingapp.repository.*;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.IOException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final HotelImageRepository hotelImageRepository;
     private final PaymentService paymentService;
+    private final JwtService jwtService;
 
     @Override
     public boolean checkReservation(ReservationRequest request)
@@ -294,14 +297,27 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public ReservedHistoryResponse getHistory(Integer id)
+    public ReservedHistoryResponse getHistory(String token)
     {
-        if(userRepository.findById(id).get().isDeleted())
+        Integer userId = null;
+        if (token != null && token.startsWith("Bearer ")) {
+            String jwtToken = token.substring(7);
+
+            Claims claims = Jwts.parser().setSigningKey(jwtService.getSignInKey()).parseClaimsJws(jwtToken).getBody();
+
+            userId = claims.get("userId", Integer.class);
+
+        }
+        if(userId == null)
+        {
+            throw new ResponseException("user not found!");
+        }
+        if(userRepository.findById(userId).get().isDeleted())
         {
             throw new ResponseException("user not found!");
         }
         ReservedHistoryResponse response = new ReservedHistoryResponse();
-        List<Reservation> reservationList = reservationRepository.findAllByUserId(id);
+        List<Reservation> reservationList = reservationRepository.findAllByUserId(userId);
         if(!reservationList.isEmpty())
         {
             List<ReservationDto> reservationDtoList = new ArrayList<>();
