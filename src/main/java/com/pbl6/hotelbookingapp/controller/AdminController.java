@@ -377,12 +377,12 @@ public class AdminController {
         }
         return ResponseEntity.ok(pendingHotels);
     }
-    @PutMapping("/hotels/{hotelId}/approve")
+    @PostMapping("/hotels/{hotelId}/approve")
     public ResponseEntity<String> approveHotel(@PathVariable Integer hotelId) {
         hotelService.approveHotel(hotelId);
         return ResponseEntity.ok("Hotel approved successfully");
     }
-    @PutMapping("/hotels/{hotelId}/decline")
+    @PostMapping("/hotels/{hotelId}/decline")
     public ResponseEntity<String> declineHotel(@PathVariable Integer hotelId) {
         hotelService.declineHotel(hotelId);
         return ResponseEntity.ok("Hotel declined successfully");
