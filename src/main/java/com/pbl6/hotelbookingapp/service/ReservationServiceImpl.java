@@ -318,6 +318,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
         ReservedHistoryResponse response = new ReservedHistoryResponse();
         List<Reservation> reservationList = reservationRepository.findAllByUserId(userId);
+        Collections.reverse(reservationList);
         if(!reservationList.isEmpty())
         {
             List<ReservationDto> reservationDtoList = new ArrayList<>();
