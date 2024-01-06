@@ -442,14 +442,13 @@ public class ReservationServiceImpl implements ReservationService {
             }
             Invoice invoice = findInvoice.get();
 
-            RefundResponse refundResponse = paymentService.refund(tranType,
-                                                                invoice.getVnpRef(),
-                                                                invoice.getInvoiceAmount()*refundPercentage,
-                                                                invoice.getVnpTransdate(),
-                                                                foundReservation.getEmail());
+//            RefundResponse refundResponse = paymentService.refund(tranType,
+//                                                                invoice.getVnpRef(),
+//                                                                invoice.getInvoiceAmount()*refundPercentage,
+//                                                                invoice.getVnpTransdate(),
+//                                                                foundReservation.getEmail());
 
-            if(refundResponse.getVnp_Message().equals("Refund success"))
-            {
+
                 invoice.setTimeCanceled(localDateTime);
                 invoice.setRefundAmount((long) (invoice.getInvoiceAmount()*refundPercentage));
 
@@ -470,16 +469,10 @@ public class ReservationServiceImpl implements ReservationService {
                 roomReservedRepository.deleteAllByReservation(foundReservation);
                 reservationRepository.save(foundReservation);
                 return cancelResponse;
-            }
-            else {
-                throw new ResponseException(refundResponse.getVnp_Message());
-            }
+
         }
-        catch (ResponseException e)
-        {
+        catch (ResponseException e) {
             throw new ResponseException(e.getMessage());
-        } catch (java.io.IOException e) {
-            throw new RuntimeException(e);
         }
 
     }
